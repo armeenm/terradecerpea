@@ -1,3 +1,4 @@
-#include <cstdio>
+#include "fmt/format.h"
+#include "gpio.hpp"
 
-int main() { puts("Hello World"); }
+int main() { Pin pin(3); }
