@@ -9,32 +9,62 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 #include "fmt/format.h"
+#include "magic_enum.hpp"
+
+using fmt::format;
+using std::ofstream;
 
 Pin::Pin(unsigned int num) : num_(num) {
     // Export pin
-    std::ofstream ostrm(
-        fmt::format("{}/{}", SYSFS_GPIO_PATH_, "export").c_str(),
-        std::ios::binary);
+    auto ostrm = file(SYSFS_GPIO_PATH_, "export");
     ostrm << num_;
-
-    for (auto n : dir_names) {
-        fmt::print("{} ", );
-    }
-
-    fd_ = open(fmt::format("{}/gpio{}/value", SYSFS_GPIO_PATH_, num_).c_str(),
-               O_RDONLY | O_NONBLOCK);
-    // if (fd_ < 0) throw std::runtime_error("Failed to open file :(");
 }
 
 Pin::~Pin() {
     // Unexport pin
-    std::ofstream ostrm(fmt::format("{}/{}", SYSFS_GPIO_PATH_, "unexport"),
-                        std::ios::binary);
+    auto ostrm = file(SYSFS_GPIO_PATH_, "unexport");
     ostrm << num_;
-
-    close(fd_);
 }
 
-void Pin::direction(Dir dir) {}
+void Pin::direction(Dir dir) {
+    auto ostrm = file("direction");
+
+    switch (dir) {
+        case Dir::IN:
+            ostrm << "in";
+            break;
+
+        case Dir::OUT:
+            ostrm << "out";
+            break;
+    }
+}
+
+Dir Pin::direction() {
+    auto ostrm = file("direction");
+
+    std::string dir;
+    ostrm >> dir;
+
+    if (dir == "in")
+        return Dir::IN;
+    else if (dir == "out")
+        return Dir::OUT;
+    else
+        throw std::runtime_error("Unknown direction!");
+}
+
+void Pin::value(Val val) {
+    value_ << format("{}", magic_enum::enum_integer<val>());
+}
+
+Val Pin::value() {}
+
+std::ofstream Pin::file(std::string_view elem) { return file(PIN_PATH_, elem); }
+
+std::ofstream Pin::file(std::string_view base, std::string_view elem) {
+    return std::ofstream(fmt::format("{}/{}", base, elem), std::ios::binary);
+}
