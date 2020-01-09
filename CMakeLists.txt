@@ -8,5 +8,5 @@ set(CMAKE_CXX_STANDARD 17)
 file(GLOB CXX_SRCS "src/*.cpp")
 add_executable(berrypicker ${CXX_SRCS})
 
-target_include_directories(berrypicker PRIVATE src)
-target_link_libraries(berrypicker fmt gpiodcxx)
+target_include_directories(berrypicker PRIVATE src /usr/include/tensorflow)
+target_link_libraries(berrypicker fmt gpiodcxx tensorflow_cc tensorflow_framework)
