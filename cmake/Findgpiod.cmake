@@ -26,10 +26,10 @@ if(gpiod_FOUND AND NOT gpiod::gpiod)
     INTERFACE_INCLUDE_DIRECTORIES "${gpiod_INCLUDE_DIR}")
 endif()
 
+# CXX #
 find_package(PkgConfig)
 pkg_check_modules(PC_gpiodcxx QUIET gpiodcxx)
 
-# CXX #
 find_path(gpiodcxx_INCLUDE_DIR
   NAMES gpiod.hpp
   PATHS ${PC_gpiodcxx_INCLUDE_DIRS})
