@@ -1,6 +1,3 @@
-#target_include_directories(berrypicker PRIVATE src third_party /usr/include/tensorflow)
-#target_link_libraries(berrypicker fmt gpiodcxx tensorflow_cc tensorflow_framework)
-
 cmake_minimum_required(VERSION 3.12...3.16)
 project(berrypicker_arm
     VERSION 0.0.1
@@ -16,10 +13,10 @@ option(STATIC_ANALYSIS
     ON)
 
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-find_package(Polhemus 1.0 REQUIRED COMPONENTS Polhemus)
-find_package(TensorFlow REQUIRED MODULE)
-find_package(gpiod REQUIRED COMPONENTS gpiodcxx)
+find_package(Polhemus 1.0 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(TensorFlow REQUIRED MODULE)
+find_package(gpiod REQUIRED MODULE)
 
 file(GLOB SRCS
     LIST_DIRECTORIES false
@@ -39,9 +36,8 @@ set_target_properties(arm PROPERTIES CXX_EXTENSIONS OFF)
 
 target_link_libraries(arm PRIVATE
     fmt::fmt
-    Polhemus::Polhemus
+    Polhemus::polhemus_cc
     TensorFlow::tensorflow_cc
-    TensorFlow::tensorflow
     gpiod::gpiodcxx)
 
 if(${FORCE_COLORED_OUTPUT})

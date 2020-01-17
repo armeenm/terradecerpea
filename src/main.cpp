@@ -8,6 +8,7 @@
 #include <gpiod.hpp>
 #include <iostream>
 #include <magic_enum.hpp>
+#include <polhemus.hpp>
 #include <vector>
 
 namespace me = magic_enum;
