@@ -1,36 +1,25 @@
 #pragma once
 
-#include <tensorflow/cc/saved_model/loader.h>
-#include <tensorflow/cc/saved_model/tag_constants.h>
+#include "TFModel.h"
+#include "dataclasses.h"
 
-#include <cstdint>
-#include <polhemus.hpp>
-#include <string>
-#include <string_view>
+#include <optional>
+#include <utility>
 
 class RLModel {
-  namespace plhm = polhemus;
-  namespace tf = tensorflow;
+public:
+  RLModel(std::string_view model_dir);
 
-  RLModel(std::string_view model_dir, std::uint8_t input_size = 5, tf::DataType dtype);
-
-  RLModel(RLModel const&) = delete;
+  RLModel(RLModel const&) = default;
   RLModel(RLModel&&) noexcept = default;
 
-  auto operator=(RLModel const&) -> RLModel& = delete;
-  auto operator=(RLModel&&) noexcept -> RLModel& = default;
+  auto operator=(RLModel const&) -> RLModel& = default;
+  auto operator=(RLModel &&) -> RLModel& = default;
 
-  ~RLModel();
+  ~RLModel() = default;
 
-  [[nodiscard]] auto predict(tf::Tensor const& input) -> tf::Tensor;
+  [[nodiscard]] auto predict(Pose const&, Pressure const&) -> std::pair<std::optional<Pressure>, float>;
 
 private:
-  std::string model_dir_;
-  tf::SessionOptions sess_opts_ = tf::SessionOptions();
-  tf::RunOptions run_opts_ = tf::RunOptions();
-  tf::SavedModelBundleLite model_;
-  tf::SignatureDef const sig_def_ = model_.GetSignatures().at(tf::kDefaultServingSignatureDefKey);
-  tf::String const input_name_ = sig_def_.inputs().at("input").name();
-  tf::TensorShape const input_shape_;
-  tf::Tensor const input_tensor_;
+  TFModel model_;
 };

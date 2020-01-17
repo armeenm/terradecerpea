@@ -1,17 +1,21 @@
 #include "RLModel.h"
 
-#include <exception>
-#include <tensorflow/cc/saved_model/constants.h>
-#include <tensorflow/core/lib/core/status.h>
+RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
 
-namespace tf = tensorflow;
+auto RLModel::predict(Pose const& pose, Pressure const& pressure) -> std::pair<std::optional<Pressure>, float> {
+  auto shape = tf::TensorShape({1, 5});
+  auto input = tf::Tensor(tf::DT_FLOAT, shape);
+  auto input_data = input.flat<float>().data();
 
-RLModel::RLModel(std::string_view model_dir, std::uint8_t const input_size, tf::DataType const dtype)
-    : model_dir_(model_dir), input_shape_(tf::TensorShape({1, input_size})),
-      input_tensor_(tf::Tensor(dtype, input_shape_)) {
+  input_data[0] = pose.x;
+  input_data[1] = pose.y;
+  input_data[2] = pose.z;
+  input_data[3] = pressure.bending;
+  input_data[4] = pressure.rotation;
 
-  auto status = tf::LoadSavedModel(sess_opts_, run_opts_, model_dir_, {tf::kSavedModelTagServe}, &model_);
-  if (!status.ok()) {
-    throw std::runtime_error(status.ToString());
-  }
+  auto output = model_.predict(input);
+  auto output_data = output.flat<float>().data();
+  auto output_pressure = Pressure{output_data[0], output_data[1]};
+
+  return {output_pressure, 0.0f};
 }

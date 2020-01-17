@@ -8,13 +8,11 @@
 #include <gpiod.hpp>
 #include <iostream>
 #include <polhemus.hpp>
-#include <vector>
+
+#include "RLModel.h"
+#include "dataclasses.h"
 
 namespace tf = tensorflow;
-
-template <typename V> using tf_str_vec = std::vector<std::pair<tf::string, V>>;
-
-using input_pairs = tf_str_vec<tf::Tensor>;
 
 int main(int argc, char** argv) {
   /* Argument Handling */
@@ -31,38 +29,11 @@ int main(int argc, char** argv) {
     fmt::print("{} [{}], Num. Lines: {}\n", chip.name(), chip.label(), chip.num_lines());
   }
 
-  /* Tensorflow RL Arm Control Model */
-  tf::SavedModelBundleLite arm_model;
-  auto sess_opts = tf::SessionOptions();
-  auto run_opts = tf::RunOptions();
+  /* RL Model */
+  auto rlmodel = RLModel(model_dir);
 
-  auto status = tensorflow::LoadSavedModel(sess_opts, run_opts, model_dir, {tf::kSavedModelTagServe}, &arm_model);
-  if (!status.ok()) {
-    std::cerr << "Failed to load model: " << status << '\n';
-    return -1;
-  }
-
-  auto* sess = arm_model.GetSession();
-  auto sig = arm_model.GetSignatures().at(tf::kDefaultServingSignatureDefKey);
-
-  auto input_name = sig.inputs().at("input").name();
-  auto input_shape = tf::TensorShape({1, 5});
-  auto input_tensor = tf::Tensor(tf::DT_FLOAT, input_shape);
-  auto input_data = input_tensor.flat<float>().data();
-  // Dummy data, for now
-  for (int i = 0; i < 5; i++) {
-    input_data[i] = 1.0;
-  }
-  auto input = input_pairs({{input_name, input_tensor}});
-
-  auto output_name = sig.outputs().at("output").name();
-  auto output = std::vector<tf::Tensor>();
-
-  status = sess->Run(input, {output_name}, {}, &output);
-  if (!status.ok()) {
-    std::cout << "Failed to infer: " << status.ToString() << '\n';
-    return -1;
-  }
-
-  std::cout << "Output: " << output[0].DebugString() << '\n';
+  auto input_pose = Pose{0.0f, 30.0f, 0.5f};
+  auto input_pressure = Pressure{0.0f, 30.0f};
+  auto [opt_pressure, err] = rlmodel.predict(input_pose, input_pressure);
+  fmt::print("Pressure: {}, {}; Error: {}", opt_pressure->bending, opt_pressure->rotation, err);
 }
