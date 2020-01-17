@@ -1,4 +1,4 @@
-#include "ml/TFModel.h"
+#include "TFModel.h"
 
 #include <exception>
 #include <fmt/format.h>
@@ -8,8 +8,6 @@
 namespace tf = tensorflow;
 
 TFModel::TFModel(std::string_view model_dir) {
-  fmt::print("Loading {}...\n", model_dir);
-
   auto status =
       tf::LoadSavedModel(tf::SessionOptions(), tf::RunOptions(), model_dir.data(), {tf::kSavedModelTagServe}, &model_);
   if (!status.ok())

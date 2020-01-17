@@ -14,7 +14,7 @@ public:
   RLModel(RLModel&&) noexcept = default;
 
   auto operator=(RLModel const&) -> RLModel& = default;
-  auto operator=(RLModel &&) -> RLModel& = default;
+  auto operator=(RLModel&&) noexcept -> RLModel& = default;
 
   ~RLModel() = default;
 
