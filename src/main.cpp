@@ -7,15 +7,12 @@
 
 #include <gpiod.hpp>
 #include <iostream>
-#include <magic_enum.hpp>
 #include <polhemus.hpp>
 #include <vector>
 
-namespace me = magic_enum;
 namespace tf = tensorflow;
 
-template <typename V>
-using tf_str_vec = std::vector<std::pair<tf::string, V>>;
+template <typename V> using tf_str_vec = std::vector<std::pair<tf::string, V>>;
 
 using input_pairs = tf_str_vec<tf::Tensor>;
 
@@ -31,8 +28,7 @@ int main(int argc, char** argv) {
 
   /* GPIO Test */
   for (const auto& chip : gpiod::make_chip_iter()) {
-    fmt::print("{} [{}], Num. Lines: {}\n", chip.name(), chip.label(),
-               chip.num_lines());
+    fmt::print("{} [{}], Num. Lines: {}\n", chip.name(), chip.label(), chip.num_lines());
   }
 
   /* Tensorflow RL Arm Control Model */
@@ -40,8 +36,7 @@ int main(int argc, char** argv) {
   auto sess_opts = tf::SessionOptions();
   auto run_opts = tf::RunOptions();
 
-  auto status = tensorflow::LoadSavedModel(
-      sess_opts, run_opts, model_dir, {tf::kSavedModelTagServe}, &arm_model);
+  auto status = tensorflow::LoadSavedModel(sess_opts, run_opts, model_dir, {tf::kSavedModelTagServe}, &arm_model);
   if (!status.ok()) {
     std::cerr << "Failed to load model: " << status << '\n';
     return -1;
