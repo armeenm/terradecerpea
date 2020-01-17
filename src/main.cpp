@@ -6,18 +6,17 @@
 #include <tensorflow/core/lib/core/status.h>
 
 #include <gpiod.hpp>
-#include <iostream>
 #include <polhemus.hpp>
 
-#include "RLModel.h"
 #include "dataclasses.h"
+#include "ml/RLModel.h"
 
 namespace tf = tensorflow;
 
 int main(int argc, char** argv) {
   /* Argument Handling */
   if (argc != 2) {
-    std::cerr << "Invalid argument count\n";
+    fmt::print(stderr, "Invalid argument count\n");
     fmt::print(stderr, "Usage: {} [arm-length]\n", argv[0]);
     return -1;
   }

@@ -18,7 +18,7 @@ find_package(fmt REQUIRED)
 find_package(TensorFlow REQUIRED MODULE)
 find_package(gpiod REQUIRED MODULE)
 
-file(GLOB SRCS
+file(GLOB_RECURSE SRCS
     LIST_DIRECTORIES false
     CONFIGURE_DEPENDS
     "src/*.cpp")
