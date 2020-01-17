@@ -1,11 +1,9 @@
 #include <fmt/format.h>
-/*
 #include <tensorflow/cc/saved_model/constants.h>
 #include <tensorflow/cc/saved_model/loader.h>
 #include <tensorflow/cc/saved_model/signature_constants.h>
 #include <tensorflow/cc/saved_model/tag_constants.h>
 #include <tensorflow/core/lib/core/status.h>
-*/
 
 #include <gpiod.hpp>
 #include <iostream>
@@ -13,14 +11,12 @@
 #include <vector>
 
 namespace me = magic_enum;
-/*
 namespace tf = tensorflow;
 
 template <typename V>
 using tf_str_vec = std::vector<std::pair<tf::string, V>>;
 
 using input_pairs = tf_str_vec<tf::Tensor>;
-*/
 
 int main(int argc, char** argv) {
   /* Argument Handling */
@@ -39,7 +35,6 @@ int main(int argc, char** argv) {
   }
 
   /* Tensorflow RL Arm Control Model */
-  /*
   tf::SavedModelBundleLite arm_model;
   auto sess_opts = tf::SessionOptions();
   auto run_opts = tf::RunOptions();
@@ -47,8 +42,8 @@ int main(int argc, char** argv) {
   auto status = tensorflow::LoadSavedModel(
       sess_opts, run_opts, model_dir, {tf::kSavedModelTagServe}, &arm_model);
   if (!status.ok()) {
-      std::cerr << "Failed to load model: " << status << '\n';
-      return -1;
+    std::cerr << "Failed to load model: " << status << '\n';
+    return -1;
   }
 
   auto* sess = arm_model.GetSession();
@@ -60,7 +55,7 @@ int main(int argc, char** argv) {
   auto input_data = input_tensor.flat<float>().data();
   // Dummy data, for now
   for (int i = 0; i < 5; i++) {
-      input_data[i] = 1.0;
+    input_data[i] = 1.0;
   }
   auto input = input_pairs({{input_name, input_tensor}});
 
@@ -69,10 +64,9 @@ int main(int argc, char** argv) {
 
   status = sess->Run(input, {output_name}, {}, &output);
   if (!status.ok()) {
-      std::cout << "Failed to infer: " << status.ToString() << '\n';
-      return -1;
+    std::cout << "Failed to infer: " << status.ToString() << '\n';
+    return -1;
   }
 
   std::cout << "Output: " << output[0].DebugString() << '\n';
-  */
 }

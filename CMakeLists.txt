@@ -17,8 +17,9 @@ option(STATIC_ANALYSIS
 
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 find_package(Polhemus 1.0 REQUIRED COMPONENTS Polhemus)
+find_package(TensorFlow REQUIRED MODULE)
+find_package(gpiod REQUIRED COMPONENTS gpiodcxx)
 find_package(fmt REQUIRED)
-find_package(gpiod REQUIRED)
 
 file(GLOB SRCS
     LIST_DIRECTORIES false
@@ -39,6 +40,8 @@ set_target_properties(arm PROPERTIES CXX_EXTENSIONS OFF)
 target_link_libraries(arm PRIVATE
     fmt::fmt
     Polhemus::Polhemus
+    TensorFlow::tensorflow_cc
+    TensorFlow::tensorflow
     gpiod::gpiodcxx)
 
 if(${FORCE_COLORED_OUTPUT})
