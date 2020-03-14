@@ -1,7 +1,7 @@
 #pragma once
 
-#include "dataclasses.h"
-#include "ml/TFModel.h"
+#include "berrypicker/data.h"
+#include "berrypicker/ml/TFModel.h"
 
 #include <optional>
 #include <utility>

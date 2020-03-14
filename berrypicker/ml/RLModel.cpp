@@ -1,4 +1,4 @@
-#include "ml/RLModel.h"
+#include "berrypicker/ml/RLModel.h"
 
 RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
 

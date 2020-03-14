@@ -8,8 +8,8 @@
 #include <gpiod.hpp>
 #include <polhemus.hpp>
 
-#include "dataclasses.h"
-#include "ml/RLModel.h"
+#include "berrypicker/data.h"
+#include "berrypicker/ml/RLModel.h"
 
 namespace tf = tensorflow;
 

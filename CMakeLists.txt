@@ -15,20 +15,18 @@ option(STATIC_ANALYSIS
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 find_package(Polhemus 1.0 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
 find_package(TensorFlow REQUIRED MODULE)
 find_package(gpiod REQUIRED MODULE)
 
 file(GLOB_RECURSE SRCS
     LIST_DIRECTORIES false
     CONFIGURE_DEPENDS
-    "src/*.cpp")
+    "berrypicker/*.cpp")
 
 add_executable(arm ${SRCS})
 
-target_include_directories(arm 
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party
-        ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(arm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_options(arm PRIVATE -Wshadow -Wall -Wextra -pedantic -pipe)
 target_compile_features(arm PRIVATE cxx_std_17)
@@ -37,6 +35,7 @@ set_target_properties(arm PROPERTIES CXX_EXTENSIONS OFF)
 target_link_libraries(arm PRIVATE
     fmt::fmt
     Polhemus::polhemus_cc
+    spdlog::spdlog
     TensorFlow::tensorflow_cc
     gpiod::gpiodcxx)
 

@@ -2,17 +2,17 @@
 
 #include <gpiod.hpp>
 
-class Relay {
+class Compressor {
 public:
-  struct Pins {
-    unsigned int stepper, compressor;
+  struct Config {
+    gpiod::line enable_line;
   };
 
   struct State {
-    bool stepper, compressor;
+    bool enabled;
   };
 
-  Relay(Pins, gpiod::chip);
+  Relay(Config);
 
   Relay(Relay const&) = delete;
   Relay(Relay&&) noexcept = default;
@@ -23,9 +23,10 @@ public:
   ~Relay() = default;
 
   auto state() const noexcept -> State;
+  auto set(bool enable) noexcept -> void;
+  auto periodic() noexcept -> void;
 
 private:
-  Pins pins_;
-  gpiod::chip chip_;
+  gpiod::line enable_line_;
   State state_;
 };
