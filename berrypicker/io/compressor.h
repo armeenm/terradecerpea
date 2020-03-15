@@ -6,27 +6,28 @@ class Compressor {
 public:
   struct Config {
     gpiod::line enable_line;
+    bool is_active_low;
   };
 
   struct State {
     bool enabled;
   };
 
-  Relay(Config);
+  Compressor(Config);
 
-  Relay(Relay const&) = delete;
-  Relay(Relay&&) noexcept = default;
+  Compressor(Compressor const&) = delete;
+  Compressor(Compressor&&) noexcept = default;
 
-  auto operator=(Relay const&) -> Relay& = delete;
-  auto operator=(Relay&&) noexcept -> Relay& = default;
+  auto operator=(Compressor const&) -> Compressor& = delete;
+  auto operator=(Compressor&&) noexcept -> Compressor& = default;
 
-  ~Relay() = default;
+  ~Compressor() = default;
 
   auto state() const noexcept -> State;
   auto set(bool enable) noexcept -> void;
   auto periodic() noexcept -> void;
 
 private:
-  gpiod::line enable_line_;
+  Config conf_;
   State state_;
 };
