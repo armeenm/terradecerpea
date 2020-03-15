@@ -1,19 +1,11 @@
 #pragma once
 
+#include "ilanta/io/logic_level.h"
 #include <gpiod.hpp>
 
 class Compressor {
 public:
-  struct Config {
-    gpiod::line enable_line;
-    bool is_active_low;
-  };
-
-  struct State {
-    bool enabled;
-  };
-
-  Compressor(Config);
+  Compressor(gpiod::line enable_line, ilanta::io::LogicLevel active_state = LogicLevel::LOW);
 
   Compressor(Compressor const&) = delete;
   Compressor(Compressor&&) noexcept = default;
@@ -23,11 +15,14 @@ public:
 
   ~Compressor() = default;
 
-  auto state() const noexcept -> State;
+  auto active_state() const noexcept -> ilanta::io::LogicLevel;
+  auto enabled() const noexcept -> bool;
+
   auto set(bool enable) noexcept -> void;
-  auto periodic() noexcept -> void;
 
 private:
-  Config conf_;
-  State state_;
+  ilanta::io::LogicLevel active_state_;
+  bool enabled_;
+
+  gpiod::line enable_line_;
 };

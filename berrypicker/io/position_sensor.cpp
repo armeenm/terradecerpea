@@ -1,6 +1,6 @@
-#include "berrypicker/io/PositionSensor.h"
-#include "berrypicker/data.h"
+#include "berrypicker/io/position_sensor.h"
 
-PositionSensor::PositionSensor(plhm::DevType dev_type) : sensor_(plhm::DevHandle(nullptr, dev_type)) {}
+PositionSensor::PositionSensor(plhm::DevType dev_type)
+    : sensor_(plhm::DevHandle(nullptr, dev_type)) {}
 
-auto PositionSensor::get() const noexcept -> Pose {}
+auto PositionSensor::pose() const noexcept -> PoseTL {}

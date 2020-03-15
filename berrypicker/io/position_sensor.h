@@ -1,6 +1,6 @@
 #pragma once
 
-#include "berrypicker/data.h"
+#include "ilanta/control/pose.h"
 #include <polhemus.hpp>
 
 namespace plhm = polhemus;
@@ -17,8 +17,8 @@ public:
 
   ~PositionSensor() = default;
 
-  auto get() const noexcept -> Pose;
+  auto pose() const noexcept -> PoseTL;
 
 private:
-  plhm::DevHandle const sensor_;
+  plhm::DevHandle sensor_;
 };
