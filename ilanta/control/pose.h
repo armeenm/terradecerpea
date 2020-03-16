@@ -1,7 +1,6 @@
 #pragma once
 
 namespace ilanta {
-namespace control {
 
 /**
  * Translational pose structure
@@ -19,5 +18,4 @@ struct PoseTL {
   }
 };
 
-} // namespace control
 } // namespace ilanta

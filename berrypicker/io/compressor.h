@@ -3,11 +3,11 @@
 #include "ilanta/io/logic_level.h"
 #include <gpiod.hpp>
 
-using ilanta::io::LogicLevel;
+using ilanta::LogicLevel;
 
 class Compressor {
 public:
-  Compressor(gpiod::line enable_line, LogicLevel active_state = LogicLevel::LOW);
+  Compressor(gpiod::line&& enable_line, LogicLevel active_state = LogicLevel::LOW);
 
   Compressor(Compressor const&) = delete;
   Compressor(Compressor&&) noexcept = default;

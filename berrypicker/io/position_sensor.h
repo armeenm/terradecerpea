@@ -18,7 +18,7 @@ public:
 
   ~PositionSensor() = default;
 
-  auto pose() const noexcept -> std::optional<ilanta::control::PoseTL>;
+  auto pose() const noexcept -> std::optional<ilanta::PoseTL>;
 
 private:
   plhm::DevHandle sensor_;

@@ -1,21 +1,26 @@
 #pragma once
 
+#include "ilanta/io/logic_level.h"
+#include <array>
 #include <gpiod.hpp>
 #include <optional>
 
+using gpiod::line;
+
 class Stepper {
 public:
-  template <typename T> struct GenericPins {
-    T step, dir, enable;
-    std::optional<T> ms1 = std::nullopt;
-    std::optional<T> ms2 = std::nullopt;
-    std::optional<T> ms3 = std::nullopt;
+  // TODO: check directions
+  enum Direction : int { FORWARD, REVERSE };
+
+  struct Pins {
+    line step, dir;
+    std::optional<line> en = std::nullopt;
+    std::optional<line> rst = std::nullopt;
+    std::optional<line> sleep = std::nullopt;
+    std::optional<std::array<line, 3>> ms = std::nullopt;
   };
 
-  using OffsetPins = GenericPins<unsigned int>;
-  using LinePins = GenericPins<gpiod::line>;
-
-  Stepper(OffsetPins, gpiod::chip);
+  Stepper(Pins&&, ilanta::LogicLevel reverse = ilanta::LogicLevel::HIGH);
 
   Stepper(Stepper const&) = delete;
   Stepper(Stepper&&) noexcept = default;
@@ -25,7 +30,8 @@ public:
 
   ~Stepper() = default;
 
+  auto move(Direction, unsigned int steps) noexcept -> unsigned int;
+
 private:
-  LinePins pins_;
-  gpiod::chip chip_;
+  Pins pins_;
 };

@@ -23,10 +23,10 @@ PositionSensor::PositionSensor(plhm::DevType dev_type)
   sensor_.send_cmd("O*,2", MAX_RESP_SIZE);
 }
 
-auto PositionSensor::pose() const noexcept -> std::optional<ilanta::control::PoseTL> {
+auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL> {
   // TODO: Make libpolhemus not throw here
   try {
-    auto pose = ilanta::control::PoseTL();
+    auto pose = ilanta::PoseTL();
     auto const delim = ',';
     auto const resp_str = sensor_.send_cmd("p", MAX_RESP_SIZE);
 

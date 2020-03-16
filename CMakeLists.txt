@@ -26,10 +26,12 @@ file(GLOB_RECURSE SRCS
 
 add_executable(arm ${SRCS})
 
+#add_subdirectory(ilanta)
+
 target_include_directories(arm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_options(arm PRIVATE -Wshadow -Wall -Wextra -pedantic -pipe)
-target_compile_features(arm PRIVATE cxx_std_17)
+target_compile_features(arm PRIVATE cxx_std_20)
 set_target_properties(arm PROPERTIES CXX_EXTENSIONS OFF)
 
 target_link_libraries(arm PRIVATE
