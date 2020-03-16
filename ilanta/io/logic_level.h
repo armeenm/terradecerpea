@@ -9,5 +9,5 @@ auto operator!(LogicLevel& orig) -> LogicLevel& {
   return (orig == LogicLevel::LOW) ? LogicLevel::HIGH : LogicLevel::LOW;
 }
 
-}; // namespace io
-}; // namespace ilanta
+} // namespace io
+} // namespace ilanta

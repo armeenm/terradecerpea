@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gpiod.hpp>
+#include <optional>
 
 class Stepper {
 public:

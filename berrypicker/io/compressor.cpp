@@ -1,4 +1,4 @@
-#include "io/Relay.h"
+#include "berrypicker/io/compressor.h"
 
 #include <exception>
 #include <fmt/core.h>
@@ -15,15 +15,15 @@ Compressor::Compressor(gpiod::line enable_line, ilanta::io::LogicLevel active_st
   enable_line_.request(DIRECTION_OUTPUT, !conf_.active_state);
 
   if (!enable_line_.is_requested()) {
-    auto err = fmt::format("Failed to request line {}", enable_line_.offset());
+    auto const err = fmt::format("Failed to request line {}", enable_line_.offset());
     spdlog::error(err);
     throw std::runtime_error(err);
   }
 }
 
-auto active_state() const noexcept -> ilanta::io::LogicLevel { return active_state_; }
-auto enabled() const noexcept -> bool { return enabled_; }
+auto Compressor::active_state() const noexcept -> ilanta::io::LogicLevel { return active_state_; }
+auto Compressor::enabled() const noexcept -> bool { return enabled_; }
 
-auto set(bool enable) noexcept -> void {
+auto Compressor::set(bool enable) noexcept -> void {
   enable_line_.set_value(enable ? active_state_ : !active_state_);
 }

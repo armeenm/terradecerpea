@@ -1,8 +1,9 @@
-#include "berrypicker/ml/RLModel.h"
+#include "berrypicker/ml/rl_model.h"
 
 RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
 
-auto RLModel::predict(Pose const& pose, Pressure const& pressure) -> std::pair<std::optional<Pressure>, float> {
+auto RLModel::predict(PoseTL const& pose, Pressure const& pressure)
+    -> std::pair<std::optional<Pressure>, float> {
   auto shape = tf::TensorShape({1, 5});
   auto input = tf::Tensor(tf::DT_FLOAT, shape);
   auto input_data = input.flat<float>().data();
@@ -11,7 +12,7 @@ auto RLModel::predict(Pose const& pose, Pressure const& pressure) -> std::pair<s
   input_data[1] = pose.y;
   input_data[2] = pose.z;
   input_data[3] = pressure.bending;
-  input_data[4] = pressure.rotation;
+  input_data[4] = pressure.rotating;
 
   auto output = model_.predict(input);
   auto output_data = output.flat<float>().data();

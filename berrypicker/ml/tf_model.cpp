@@ -1,4 +1,4 @@
-#include "berrypicker/ml/TFModel.h"
+#include "berrypicker/ml/tf_model.h"
 
 #include <exception>
 #include <fmt/format.h>
@@ -8,8 +8,8 @@
 namespace tf = tensorflow;
 
 TFModel::TFModel(std::string_view model_dir) {
-  auto status =
-      tf::LoadSavedModel(tf::SessionOptions(), tf::RunOptions(), model_dir.data(), {tf::kSavedModelTagServe}, &model_);
+  auto status = tf::LoadSavedModel(tf::SessionOptions(), tf::RunOptions(), model_dir.data(),
+                                   {tf::kSavedModelTagServe}, &model_);
   if (!status.ok())
     throw std::runtime_error(status.ToString());
 

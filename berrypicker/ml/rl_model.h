@@ -1,7 +1,8 @@
 #pragma once
 
-#include "berrypicker/data.h"
-#include "berrypicker/ml/TFModel.h"
+#include "berrypicker/ml/tf_model.h"
+#include "berrypicker/pressure.h"
+#include "ilanta/control/pose.h"
 
 #include <optional>
 #include <utility>
@@ -18,7 +19,8 @@ public:
 
   ~RLModel() = default;
 
-  [[nodiscard]] auto predict(Pose const&, Pressure const&) -> std::pair<std::optional<Pressure>, float>;
+  [[nodiscard]] auto predict(PoseTL const&, Pressure const&)
+      -> std::pair<std::optional<Pressure>, float>;
 
 private:
   TFModel model_;

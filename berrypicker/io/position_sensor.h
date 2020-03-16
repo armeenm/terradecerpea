@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ilanta/control/pose.h"
+#include <optional>
 #include <polhemus.hpp>
 
 namespace plhm = polhemus;
@@ -17,7 +18,7 @@ public:
 
   ~PositionSensor() = default;
 
-  auto pose() const noexcept -> PoseTL;
+  auto pose() const noexcept -> std::optional<PoseTL>;
 
 private:
   plhm::DevHandle sensor_;

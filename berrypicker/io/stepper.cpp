@@ -1,4 +1,4 @@
-#include "berrypicker/io/Stepper.h"
+#include "berrypicker/io/stepper.h"
 
 Stepper::Stepper(Pins pins) : pins_(std::move(pins)) {
   if (!chip_)
