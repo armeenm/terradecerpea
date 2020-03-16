@@ -19,7 +19,7 @@ public:
 
   ~RLModel() = default;
 
-  [[nodiscard]] auto predict(PoseTL const&, Pressure const&)
+  [[nodiscard]] auto predict(ilanta::control::PoseTL const&, Pressure const&)
       -> std::pair<std::optional<Pressure>, float>;
 
 private:

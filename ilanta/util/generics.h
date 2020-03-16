@@ -5,7 +5,7 @@
 namespace ilanta {
 namespace util {
 
-template <typename E> auto to_underlying(E e) {
+template <typename E> constexpr auto underlying_cast(E e) {
   return static_cast<typename std::underlying_type_t<E>>(e);
 }
 

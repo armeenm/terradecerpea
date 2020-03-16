@@ -2,7 +2,7 @@
 
 RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
 
-auto RLModel::predict(PoseTL const& pose, Pressure const& pressure)
+auto RLModel::predict(ilanta::control::PoseTL const& pose, Pressure const& pressure)
     -> std::pair<std::optional<Pressure>, float> {
   auto shape = tf::TensorShape({1, 5});
   auto input = tf::Tensor(tf::DT_FLOAT, shape);

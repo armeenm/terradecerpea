@@ -23,10 +23,10 @@ PositionSensor::PositionSensor(plhm::DevType dev_type)
   sensor_.send_cmd("O*,2", MAX_RESP_SIZE);
 }
 
-auto PositionSensor::pose() const noexcept -> std::optional<PoseTL> {
+auto PositionSensor::pose() const noexcept -> std::optional<ilanta::control::PoseTL> {
   // TODO: Make libpolhemus not throw here
   try {
-    auto pose = PoseTL();
+    auto pose = ilanta::control::PoseTL();
     auto const delim = ',';
     auto const resp_str = sensor_.send_cmd("p", MAX_RESP_SIZE);
 
@@ -38,11 +38,18 @@ auto PositionSensor::pose() const noexcept -> std::optional<PoseTL> {
 
     auto const delim2 = std::find(delim1 + 1, std::end(resp_str), delim);
 
-    pose.x = std::stof(std::begin(resp_str));
-    pose.y = std::stof(delim1 + 1);
-    pose.z = std::stof(delim2 + 1);
+    auto delim1_p = const_cast<char*>(&(*delim1));
+    auto delim2_p = const_cast<char*>(&(*delim2));
+    auto end_p = const_cast<char*>(&(*std::end(resp_str)));
+
+    pose.x = std::strtof(&(*std::begin(resp_str)), &delim1_p);
+    pose.y = std::strtof(delim1_p + 1, &delim2_p);
+    pose.z = std::strtof(delim2_p + 1, &end_p);
+
+    return pose;
 
   } catch (std::exception const& e) {
     spdlog::error(e.what());
+    return std::nullopt;
   }
 }
