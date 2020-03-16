@@ -8,8 +8,9 @@
 #include <gpiod.hpp>
 #include <polhemus.hpp>
 
-#include "berrypicker/data.h"
-#include "berrypicker/ml/RLModel.h"
+#include "berrypicker/ml/rl_model.h"
+#include "berrypicker/pressure.h"
+#include "ilanta/control/pose.h"
 
 namespace tf = tensorflow;
 
@@ -31,7 +32,7 @@ int main(int argc, char** argv) {
   /* RL Model */
   auto rlmodel = RLModel(model_dir);
 
-  auto input_pose = Pose{0.0f, 30.0f, 0.5f};
+  auto input_pose = PoseTL{0.0f, 30.0f, 0.5f};
   auto input_pressure = Pressure{0.0f, 30.0f};
   auto [opt_pressure, err] = rlmodel.predict(input_pose, input_pressure);
   fmt::print("Pressure: {}, {}; Error: {}", opt_pressure->bending, opt_pressure->rotation, err);

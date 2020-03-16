@@ -1,7 +1,7 @@
 #include "berrypicker/io/stepper.h"
 
-Stepper::Stepper(Pins pins) : pins_(std::move(pins)) {
-  if (!chip_)
+Stepper::Stepper(OffsetPins pins, gpiod::chip chip) {
+  if (!chip)
     throw std::runtime_error("GPIO chip invalid");
 }
 

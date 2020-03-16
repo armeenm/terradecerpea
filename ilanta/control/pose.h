@@ -1,5 +1,8 @@
 #pragma once
 
+namespace ilanta {
+namespace control {
+
 /**
  * Translational pose structure
  */
@@ -15,3 +18,6 @@ struct PoseTL {
     return PoseTL{x - other.x, y - other.y, z - other.z};
   }
 };
+
+} // namespace control
+} // namespace ilanta

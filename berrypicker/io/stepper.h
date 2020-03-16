@@ -5,12 +5,17 @@
 
 class Stepper {
 public:
-  struct Pins {
-    unsigned int step, dir, enable;
-    std::optional<unsigned int> ms1, ms2, ms3;
+  template <typename T> struct GenericPins {
+    T step, dir, enable;
+    std::optional<T> ms1 = std::nullopt;
+    std::optional<T> ms2 = std::nullopt;
+    std::optional<T> ms3 = std::nullopt;
   };
 
-  Stepper(Pins, gpiod::chip);
+  using OffsetPins = GenericPins<unsigned int>;
+  using LinePins = GenericPins<gpiod::line>;
+
+  Stepper(OffsetPins, gpiod::chip);
 
   Stepper(Stepper const&) = delete;
   Stepper(Stepper&&) noexcept = default;
@@ -21,6 +26,6 @@ public:
   ~Stepper() = default;
 
 private:
-  Pins pins_;
+  LinePins pins_;
   gpiod::chip chip_;
 };
