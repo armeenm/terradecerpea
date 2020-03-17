@@ -2,7 +2,7 @@
 
 #include "berrypicker/ml/tf_model.h"
 #include "berrypicker/pressure.h"
-#include "ilanta/control/pose.h"
+#include <ilanta/control/pose.hpp>
 
 #include <optional>
 #include <utility>

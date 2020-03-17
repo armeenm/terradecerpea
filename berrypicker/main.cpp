@@ -10,7 +10,7 @@
 
 #include "berrypicker/ml/rl_model.h"
 #include "berrypicker/pressure.h"
-#include "ilanta/control/pose.h"
+#include <ilanta/control/pose.hpp>
 
 namespace tf = tensorflow;
 

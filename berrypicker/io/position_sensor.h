@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ilanta/control/pose.h"
+#include <ilanta/control/pose.hpp>
 #include <optional>
 #include <polhemus.hpp>
 

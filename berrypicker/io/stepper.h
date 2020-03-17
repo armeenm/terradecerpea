@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ilanta/io/logic_level.h"
 #include <array>
 #include <gpiod.hpp>
+#include <ilanta/io/logic_level.hpp>
 #include <optional>
 
 using gpiod::line;

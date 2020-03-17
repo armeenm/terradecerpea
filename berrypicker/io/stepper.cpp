@@ -1,24 +1,22 @@
 #include "berrypicker/io/stepper.h"
 
 #include "berrypicker/constants.h"
-#include "ilanta/io/gpiod.h"
-#include "ilanta/util/generics.h"
+#include <ilanta/io/gpiod.hpp>
+#include <ilanta/util/generics.hpp>
 
 #include <exception>
-#include <fmt/core.h>
+#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 
 Stepper::Stepper(Pins&& pins, ilanta::LogicLevel reverse) : pins_(std::move(pins)) {
   spdlog::info("Constructing Stepper");
 
-  // auto success...
-  auto ILANTA_GPIO_OUTPUT_THROW(pins_.step);
+  ILANTA_GPIO_OUTPUT_THROW(pins_.step);
 
   ILANTA_GPIO_OUTPUT_THROW(pins_.dir, reverse == ilanta::LogicLevel::LOW);
 
-  if (pins_.en) {
+  if (pins_.en)
     ILANTA_GPIO_OUTPUT_THROW(*pins_.en, true);
-  }
 
   if (pins_.rst)
     ILANTA_GPIO_OUTPUT_THROW(*pins_.rst, true);
@@ -27,9 +25,8 @@ Stepper::Stepper(Pins&& pins, ilanta::LogicLevel reverse) : pins_(std::move(pins
     ILANTA_GPIO_OUTPUT_THROW(*pins_.sleep, true);
 
   if (pins_.ms)
-    for (auto&& pin : *pins_.ms) {
+    for (auto&& pin : *pins_.ms)
       ILANTA_GPIO_OUTPUT_THROW(pin);
-    }
 }
 
 /**

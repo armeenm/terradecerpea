@@ -2,7 +2,7 @@
 
 #include <array>
 #include <exception>
-#include <fmt/core.h>
+#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <string>
 
