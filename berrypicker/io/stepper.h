@@ -30,7 +30,7 @@ public:
 
   ~Stepper() = default;
 
-  auto move(Direction, unsigned int steps) noexcept -> unsigned int;
+  auto move(Direction, unsigned int steps) noexcept -> void;
 
 private:
   Pins pins_;
