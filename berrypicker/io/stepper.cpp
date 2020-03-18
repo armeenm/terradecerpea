@@ -1,33 +1,35 @@
 #include "berrypicker/io/stepper.h"
 
-#include "berrypicker/constants.h"
 #include <ilanta/io/gpiod.hpp>
 
 #include <chrono>
 #include <exception>
-#include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <thread>
 
 Stepper::Stepper(Pins&& pins, ilanta::LogicLevel const reverse) : pins_(std::move(pins)) {
   spdlog::info("Constructing Stepper");
 
-  ILANTA_GPIO_OUTPUT_THROW(pins_.step);
+  auto constexpr setup_l = [](gpiod::line const& l, auto&&... ts) {
+    ilanta::request_output(l, "Berrypicker", std::forward<decltype(ts)>(ts)...);
+  };
 
-  ILANTA_GPIO_OUTPUT_THROW(pins_.dir, reverse == ilanta::LogicLevel::LOW);
+  setup_l(pins_.step);
+
+  setup_l(pins_.dir, reverse == ilanta::LogicLevel::LOW);
 
   if (pins_.en)
-    ILANTA_GPIO_OUTPUT_THROW(*pins_.en, true);
+    setup_l(*pins_.en, true);
 
   if (pins_.rst)
-    ILANTA_GPIO_OUTPUT_THROW(*pins_.rst, true);
+    setup_l(*pins_.rst, true);
 
   if (pins_.sleep)
-    ILANTA_GPIO_OUTPUT_THROW(*pins_.sleep, true);
+    setup_l(*pins_.sleep, true);
 
   if (pins_.ms)
-    for (auto&& pin : *pins_.ms)
-      ILANTA_GPIO_OUTPUT_THROW(pin);
+    for (const auto& pin : *pins_.ms)
+      setup_l(pin);
 }
 
 /**
