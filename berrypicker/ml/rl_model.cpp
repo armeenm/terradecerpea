@@ -2,15 +2,15 @@
 
 RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
 
-auto RLModel::predict(ilanta::PoseTL const& pose, Pressure const& pressure)
+auto RLModel::predict(ilanta::PoseTL<float> const& pose, Pressure const& pressure)
     -> std::pair<std::optional<Pressure>, float> {
   auto shape = tf::TensorShape({1, 5});
   auto input = tf::Tensor(tf::DT_FLOAT, shape);
   auto input_data = input.flat<float>().data();
 
-  input_data[0] = pose.x;
-  input_data[1] = pose.y;
-  input_data[2] = pose.z;
+  input_data[0] = pose.x();
+  input_data[1] = pose.y();
+  input_data[2] = pose.z();
   input_data[3] = pressure.bending;
   input_data[4] = pressure.rotating;
 

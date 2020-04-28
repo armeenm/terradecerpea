@@ -1,9 +1,4 @@
 #include <fmt/format.h>
-#include <tensorflow/cc/saved_model/constants.h>
-#include <tensorflow/cc/saved_model/loader.h>
-#include <tensorflow/cc/saved_model/signature_constants.h>
-#include <tensorflow/cc/saved_model/tag_constants.h>
-#include <tensorflow/core/lib/core/status.h>
 
 #include <gpiod.hpp>
 #include <polhemus.hpp>
@@ -11,8 +6,6 @@
 #include "berrypicker/ml/rl_model.h"
 #include "berrypicker/pressure.h"
 #include <ilanta/control/pose.hpp>
-
-namespace tf = tensorflow;
 
 int main(int argc, char** argv) {
   /* Argument Handling */
@@ -32,8 +25,9 @@ int main(int argc, char** argv) {
   /* RL Model */
   auto rlmodel = RLModel(model_dir);
 
-  auto input_pose = ilanta::PoseTL{0.0f, 30.0f, 0.5f};
-  auto input_pressure = Pressure{0.0f, 30.0f};
+  auto input_pose = ilanta::PoseTL{0.0F, 30.0F, 0.5F};
+  auto input_pressure = Pressure{0.0F, 30.0F};
   auto [opt_pressure, err] = rlmodel.predict(input_pose, input_pressure);
+
   fmt::print("Pressure: {}, {}; Error: {}", opt_pressure->bending, opt_pressure->rotating, err);
 }

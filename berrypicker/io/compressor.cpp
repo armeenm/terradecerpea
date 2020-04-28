@@ -1,6 +1,5 @@
 #include "berrypicker/io/compressor.h"
 
-#include "berrypicker/constants.h"
 #include <ilanta/io/gpiod.hpp>
 
 #include <exception>

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <exception>
+#include <ilanta/control/pose.hpp>
 #include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -23,10 +24,10 @@ PositionSensor::PositionSensor(plhm::DevType dev_type)
   sensor_.send_cmd("O*,2", MAX_RESP_SIZE);
 }
 
-auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL> {
+auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL<float>> {
   // TODO: Make libpolhemus not throw here
   try {
-    auto pose = ilanta::PoseTL();
+    auto pose = ilanta::PoseTL<float>{};
     auto const delim = ',';
     auto const resp_str = sensor_.send_cmd("p", MAX_RESP_SIZE);
 
@@ -42,9 +43,9 @@ auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL> {
     auto delim2_p = const_cast<char*>(&(*delim2));
     auto end_p = const_cast<char*>(&(*std::end(resp_str)));
 
-    pose.x = std::strtof(&(*std::begin(resp_str)), &delim1_p);
-    pose.y = std::strtof(delim1_p + 1, &delim2_p);
-    pose.z = std::strtof(delim2_p + 1, &end_p);
+    pose.x(std::strtof(&(*std::begin(resp_str)), &delim1_p));
+    pose.y(std::strtof(delim1_p + 1, &delim2_p));
+    pose.z(std::strtof(delim2_p + 1, &end_p));
 
     return pose;
 
