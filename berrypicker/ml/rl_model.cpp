@@ -1,22 +1,26 @@
 #include "berrypicker/ml/rl_model.h"
 
-RLModel::RLModel(std::string_view model_dir) : model_(TFModel(model_dir)) {}
+#include <iostream>
+
+RLModel::RLModel(std::string_view model_file) : model_file_{model_file} {
+  module_ = torch::jit::load(model_file_.c_str());
+}
 
 auto RLModel::predict(ilanta::PoseTL<float> const& pose, Pressure const& pressure)
     -> std::pair<std::optional<Pressure>, float> {
-  auto shape = tf::TensorShape({1, 5});
-  auto input = tf::Tensor(tf::DT_FLOAT, shape);
-  auto input_data = input.flat<float>().data();
 
-  input_data[0] = pose.x();
-  input_data[1] = pose.y();
-  input_data[2] = pose.z();
-  input_data[3] = pressure.bending;
-  input_data[4] = pressure.rotating;
+  auto input = std::vector<torch::jit::IValue>{torch::empty({1, 5})};
 
-  auto output = model_.predict(input);
-  auto output_data = output.flat<float>().data();
-  auto output_pressure = Pressure{output_data[0], output_data[1]};
+  input[0] = pose.x();
+  input[1] = pose.y();
+  input[2] = pose.z();
+  input[3] = pressure.bending;
+  input[4] = pressure.rotating;
 
-  return {output_pressure, 0.0f};
+  auto output = module_.forward(input).toTensor();
+
+  std::cout << output << '\n';
+
+  // TODO: what is this float??
+  return {Pressure{output[0].item<float>(), output[1].item<float>()}, 0.0f};
 }

@@ -1,15 +1,17 @@
 #pragma once
 
 #include "berrypicker/pressure.h"
-#include <ilanta/control/pose.hpp>
-#include <ilanta/ml/tf_model.hpp>
 
+#include <ilanta/control/pose.hpp>
 #include <optional>
+#include <string>
+#include <string_view>
+#include <torch/script.h>
 #include <utility>
 
 class RLModel {
 public:
-  RLModel(std::string_view model_dir);
+  [[nodiscard]] RLModel(std::string_view model_file);
 
   RLModel(RLModel const&) = default;
   RLModel(RLModel&&) noexcept = default;
@@ -19,9 +21,12 @@ public:
 
   ~RLModel() = default;
 
+  [[nodiscard]] auto model_file() const noexcept -> std::string_view;
+
   [[nodiscard]] auto predict(ilanta::PoseTL<float> const&, Pressure const&)
       -> std::pair<std::optional<Pressure>, float>;
 
 private:
-  TFModel model_;
+  std::string model_file_;
+  torch::jit::script::Module module_;
 };

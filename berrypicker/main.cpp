@@ -1,11 +1,10 @@
-#include <fmt/format.h>
-
-#include <gpiod.hpp>
-#include <polhemus.hpp>
-
 #include "berrypicker/ml/rl_model.h"
 #include "berrypicker/pressure.h"
+
+#include <fmt/format.h>
+#include <gpiod.hpp>
 #include <ilanta/control/pose.hpp>
+#include <polhemus.hpp>
 
 int main(int argc, char** argv) {
   /* Argument Handling */
@@ -15,7 +14,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  const auto model_dir = fmt::format("../models/actormodel{}", argv[1]);
+  const auto model_dir = fmt::format("models/actormodel{}", argv[1]);
 
   /* GPIO Test */
   for (const auto& chip : gpiod::make_chip_iter()) {

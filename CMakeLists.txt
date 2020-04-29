@@ -16,11 +16,13 @@ option(STATIC_ANALYSIS
   "Enable static analysis tools"
   OFF)
 
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
+list(PREPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 find_package(Polhemus 1.0 REQUIRED)
 find_package(Ilanta REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(gpiodcxx REQUIRED MODULE)
+find_package(gpiodcxx REQUIRED)
+find_package(Torch REQUIRED)
 
 file(GLOB_RECURSE SRCS
   LIST_DIRECTORIES false
@@ -29,34 +31,41 @@ file(GLOB_RECURSE SRCS
 
 add_executable(arm ${SRCS})
 
-target_include_directories(arm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-set(BUILD_OPTS
+target_compile_options(arm PRIVATE 
   -Wshadow
+  -Warray-bounds
+  -Wzero-length-bounds
+  -Wstring-compare
+  -Wstringop-overflow
+  #-Wmismatched-tags
+  #-Wredundant-tags
   -Wduplicated-cond
   -Wlogical-op
   -Wduplicated-branches
   -Wnull-dereference
   -Wold-style-cast
   -Wuseless-cast
-  -Wformat=2
+  -Wformat=2 
   -Wall
   -Wextra
   -Wconversion
   -Wpedantic
   -pipe
   -flto
-  -fsanitize=undefined)
+  "${TORCH_CXX_FLAGS}")
 
-target_compile_options(arm PRIVATE ${BUILD_OPTS})
+target_include_directories(arm PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(arm PRIVATE cxx_std_20)
-set_target_properties(arm PROPERTIES CXX_EXTENSIONS OFF)
+
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+  target_compile_options(arm PRIVATE -fsanitize=address -fsanitize=undefined)
+  target_link_libraries(arm PRIVATE asan ubsan)
+endif()
 
 target_link_libraries(arm PRIVATE
-  ubsan
+  "${TORCH_LIBRARIES}"
   gpiodcxx::gpiodcxx
   Ilanta::Ilanta
-  TensorFlow_DEP
   Polhemus::polhemus_cxx
   spdlog::spdlog)
 
