@@ -1,10 +1,9 @@
 #include "berrypicker/io/position_sensor.h"
 
-#include <array>
-#include <exception>
 #include <ilanta/control/pose.hpp>
 #include <spdlog/fmt/bundled/core.h>
 #include <spdlog/spdlog.h>
+#include <stdexcept>
 #include <string>
 
 constexpr int MAX_RESP_SIZE = 1000;
@@ -26,9 +25,11 @@ PositionSensor::PositionSensor(plhm::DevType dev_type)
 
 auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL<float>> {
   // TODO: Make libpolhemus not throw here
+  //
   try {
     auto pose = ilanta::PoseTL<float>{};
-    auto const delim = ',';
+    auto constexpr delim = ',';
+
     auto const resp_str = sensor_.send_cmd("p", MAX_RESP_SIZE);
 
     auto const delim1 = std::find(std::begin(resp_str), std::end(resp_str), delim);

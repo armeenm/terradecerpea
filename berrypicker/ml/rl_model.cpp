@@ -2,9 +2,7 @@
 
 #include <iostream>
 
-RLModel::RLModel(std::string_view model_file) : model_file_{model_file} {
-  module_ = torch::jit::load(model_file_.c_str());
-}
+RLModel::RLModel(std::string_view model_file) { module_ = torch::jit::load(model_file.data()); }
 
 auto RLModel::predict(ilanta::PoseTL<float> const& pose, Pressure const& pressure)
     -> std::pair<std::optional<Pressure>, float> {

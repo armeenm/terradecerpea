@@ -21,12 +21,9 @@ public:
 
   ~RLModel() = default;
 
-  [[nodiscard]] auto model_file() const noexcept -> std::string_view;
-
   [[nodiscard]] auto predict(ilanta::PoseTL<float> const&, Pressure const&)
       -> std::pair<std::optional<Pressure>, float>;
 
 private:
-  std::string model_file_;
   torch::jit::script::Module module_;
 };

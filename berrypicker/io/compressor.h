@@ -7,7 +7,7 @@ using ilanta::LogicLevel;
 
 class Compressor {
 public:
-  Compressor(gpiod::line&& enable_line, LogicLevel active_state = LogicLevel::LOW);
+  [[nodiscard]] Compressor(gpiod::line&& enable_line, LogicLevel active_state = LogicLevel::LOW);
 
   Compressor(Compressor const&) = delete;
   Compressor(Compressor&&) noexcept = default;
@@ -17,11 +17,13 @@ public:
 
   ~Compressor() = default;
 
-  auto enabled() const noexcept -> bool;
+  [[nodiscard]] auto enabled() const noexcept -> bool;
 
-  auto set(bool enable) noexcept -> void;
+  auto set(bool enabled) noexcept -> void;
+  auto enable() noexcept -> void;
+  auto disable() noexcept -> void;
 
 private:
   gpiod::line enable_line_;
-  bool enabled_;
+  bool enabled_ = false;
 };

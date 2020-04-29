@@ -1,3 +1,3 @@
 #pragma once
 
-auto inline constexpr CONSUMER_NAME = "Berrypicker";
+auto constexpr inline consumer_name = "Berrypicker";
