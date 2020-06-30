@@ -22,7 +22,7 @@ find_package(Polhemus 1.0 REQUIRED)
 find_package(Ilanta REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(gpiodcxx REQUIRED)
-find_package(Torch REQUIRED)
+#find_package(Torch REQUIRED)
 
 file(GLOB_RECURSE SRCS
   LIST_DIRECTORIES false

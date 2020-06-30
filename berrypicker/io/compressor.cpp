@@ -1,12 +1,12 @@
 #include "berrypicker/io/compressor.h"
 #include "berrypicker/const.h"
 
-#include <ilanta/io/gpiod.hpp>
+#include <ilanta/hal/hw/gpiod.hpp>
 #include <spdlog/spdlog.h>
 
 Compressor::Compressor(gpiod::line&& enable_line, LogicLevel active_state)
     : enable_line_{std::move(enable_line)} {
-  spdlog::info("Constructing Compressor");
+  spdlog::debug("Constructing Compressor");
 
   ilanta::request_output(enable_line_, consumer_name, active_state == LogicLevel::LOW);
 }

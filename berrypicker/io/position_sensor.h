@@ -9,7 +9,7 @@ namespace plhm = polhemus;
 class PositionSensor {
 public:
   [[nodiscard]] PositionSensor(plhm::DevType);
-  [[nodiscard]] PositionSensor() : PositionSensor{plhm::PATRIOT_HS} {}
+  [[nodiscard]] PositionSensor() : PositionSensor{plhm::DevType::PATRIOT_HS} {}
 
   PositionSensor(PositionSensor const&) = delete;
   PositionSensor(PositionSensor&&) noexcept = default;
