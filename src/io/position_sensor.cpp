@@ -1,4 +1,4 @@
-#include "berrypicker/io/position_sensor.h"
+#include "io/position_sensor.h"
 
 #include <ilanta/control/pose.hpp>
 #include <spdlog/fmt/bundled/core.h>
@@ -18,9 +18,9 @@ PositionSensor::PositionSensor(plhm::DevType dev_type)
     throw std::runtime_error(err);
   }
 
-  sensor_.send_cmd("F0", MAX_RESP_SIZE);
-  sensor_.send_cmd("U1", MAX_RESP_SIZE);
-  sensor_.send_cmd("O*,2", MAX_RESP_SIZE);
+  (void)sensor_.send_cmd("F0", MAX_RESP_SIZE);
+  (void)sensor_.send_cmd("U1", MAX_RESP_SIZE);
+  (void)sensor_.send_cmd("O*,2", MAX_RESP_SIZE);
 }
 
 auto PositionSensor::pose() const noexcept -> std::optional<ilanta::PoseTL<float>> {

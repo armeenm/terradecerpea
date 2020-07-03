@@ -1,5 +1,5 @@
-#include "berrypicker/io/compressor.h"
-#include "berrypicker/const.h"
+#include "io/compressor.h"
+#include "const.h"
 
 #include <ilanta/hal/hw/gpiod.hpp>
 #include <spdlog/spdlog.h>
