@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <filesystem>
-#include <string>
 #include <gpiod.hpp>
 #include <ilanta/control/pose.hpp>
 #include <ilanta/hal/hw/pca9685.hpp>
@@ -11,6 +10,7 @@
 #include <range/v3/algorithm/find.hpp>
 #include <range/v3/view/transform.hpp>
 #include <spdlog/spdlog.h>
+#include <string>
 
 #ifdef NDEBUG
 auto constexpr inline is_debug = false;
@@ -32,30 +32,23 @@ auto main(int const argc, char const* const* const argv) -> int {
     return -1;
   }
 
-  auto constexpr bus_path = "/dev/i2c-0"sv;
-  auto const bus_paths = ilanta::SMBus::find_buses();
+  auto constexpr i2c_port = 0U;
 
-  auto bus_strs =
-      bus_paths | views::transform([](std::filesystem::path path) { return path.string(); });
+  try {
 
-  auto const found = ranges::find(bus_strs, bus_path);
+    auto servo = ilanta::PCA9685{{i2c_port}};
 
-  if (found == ranges::end(bus_strs)) {
-    spdlog::error("Failed to find SMBus bus");
-    return -1;
-  } else
-    spdlog::info("Successfully found SMBus bus");
+    auto err = servo.freq(50);
+    if (err)
+      spdlog::error("Failed to set frequency: {}", err.message());
 
-  auto bus = ilanta::SMBus{bus_path};
-  auto servo = ilanta::PCA9685{bus};
+    servo.duty_cycle(0, std::stoi(argv[1]));
+    if (err)
+      spdlog::error("Failed to set duty_cycle: {}", err.message());
 
-  auto err = servo.freq(50);
-  if (err)
-    spdlog::error("Failed to set frequency: {}", err.message());
-
-  servo.duty_cycle(0, std::stoi(argv[1]));
-  if (err)
-    spdlog::error("Failed to set duty_cycle: {}", err.message());
+  } catch (std::exception const& e) {
+    spdlog::error("Exception thrown: {}", e.what());
+  }
 
   /*
   auto const model_dir = fmt::format("models/actormodel{}", argv[1]);
