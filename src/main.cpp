@@ -31,30 +31,29 @@ auto main(int const argc, char const* const* const argv) -> int {
     return -1;
   }
 
-  auto constexpr i2c_path = "/dev/i2c-0"sv;
-  auto const i2c_paths = ilanta::I2C::find_buses();
+  auto constexpr bus_path = "/dev/bus-0"sv;
+  auto const bus_paths = ilanta::SMBus::find_buses();
 
-  auto i2c_strs = i2c_paths | views::transform([](std::filesystem::path path) {
-    return path.string();
-  });
+  auto bus_strs =
+      bus_paths | views::transform([](std::filesystem::path path) { return path.string(); });
 
-  auto const found = ranges::find(i2c_strs, i2c_path);
+  auto const found = ranges::find(bus_strs, bus_path);
 
-  if (found == ranges::end(i2c_strs)) {
-    spdlog::error("Failed to find I2C bus");
+  if (found == ranges::end(bus_strs)) {
+    spdlog::error("Failed to find SMBus bus");
     return -1;
   } else
-    spdlog::info("Successfully found I2C bus");
+    spdlog::info("Successfully found SMBus bus");
 
-  auto i2c = ilanta::I2C{i2c_path};
+  auto bus = ilanta::SMBus{bus_path};
 
-  spdlog::info("Device funcs: {}", i2c.info().funcs);
+  spdlog::info("Device funcs: {}", bus.info().funcs);
   spdlog::info("Finding devices...");
 
-  /*
-  for (auto const& dev: i2c.find_devs())
+  for (auto const& dev : bus.find_devs())
     spdlog::info("Found device at address {}", dev);
 
+  /*
   auto const model_dir = fmt::format("models/actormodel{}", argv[1]);
 
   // GPIO Test //
