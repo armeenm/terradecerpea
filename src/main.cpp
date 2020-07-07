@@ -31,7 +31,7 @@ auto main(int const argc, char const* const* const argv) -> int {
     return -1;
   }
 
-  auto constexpr bus_path = "/dev/bus-0"sv;
+  auto constexpr bus_path = "/dev/i2c-0"sv;
   auto const bus_paths = ilanta::SMBus::find_buses();
 
   auto bus_strs =
@@ -46,9 +46,6 @@ auto main(int const argc, char const* const* const argv) -> int {
     spdlog::info("Successfully found SMBus bus");
 
   auto bus = ilanta::SMBus{bus_path};
-
-  spdlog::info("Device funcs: {}", bus.info().funcs);
-  spdlog::info("Finding devices...");
 
   for (auto const& dev : bus.find_devs())
     spdlog::info("Found device at address {}", dev);
