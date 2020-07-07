@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <string>
 #include <gpiod.hpp>
 #include <ilanta/control/pose.hpp>
 #include <ilanta/hal/hw/pca9685.hpp>
@@ -46,9 +47,15 @@ auto main(int const argc, char const* const* const argv) -> int {
     spdlog::info("Successfully found SMBus bus");
 
   auto bus = ilanta::SMBus{bus_path};
+  auto servo = ilanta::PCA9685{bus};
 
-  for (auto const& dev : bus.find_devs())
-    spdlog::info("Found device at address {}", dev);
+  auto err = servo.freq(50);
+  if (err)
+    spdlog::error("Failed to set frequency: {}", err.message());
+
+  servo.duty_cycle(0, std::stoi(argv[1]));
+  if (err)
+    spdlog::error("Failed to set duty_cycle: {}", err.message());
 
   /*
   auto const model_dir = fmt::format("models/actormodel{}", argv[1]);
