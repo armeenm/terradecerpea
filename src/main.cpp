@@ -23,7 +23,6 @@ auto main(int const argc, char const* const* const argv) -> int {
   using namespace ranges;
 
   spdlog::set_level(is_debug ? spdlog::level::debug : spdlog::level::info);
-  spdlog::set_level(spdlog::level::debug);
 
   // Argument handling //
   if (argc != 2) {
@@ -36,13 +35,19 @@ auto main(int const argc, char const* const* const argv) -> int {
 
   try {
 
-    auto servo = ilanta::PCA9685{{i2c_port}};
+    auto bus = ilanta::SMBus{i2c_port};
+    for (auto const& dev: bus.find_devs())
+      spdlog::info("Device found: {}", dev);
+
+    spdlog::info("Funcs: {}", bus.funcs());
+
+    auto servo = ilanta::PCA9685{std::move(bus)};
 
     auto err = servo.freq(50);
     if (err)
       spdlog::error("Failed to set frequency: {}", err.message());
 
-    servo.duty_cycle(0, std::stoi(argv[1]));
+    err = servo.duty_cycle(0, std::stoi(argv[1]));
     if (err)
       spdlog::error("Failed to set duty_cycle: {}", err.message());
 
