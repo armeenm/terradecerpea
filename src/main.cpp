@@ -34,14 +34,7 @@ auto main(int const argc, char const* const* const argv) -> int {
   auto constexpr i2c_port = 0U;
 
   try {
-
-    auto bus = ilanta::SMBus{i2c_port};
-    for (auto const& dev: bus.find_devs())
-      spdlog::info("Device found: {}", dev);
-
-    spdlog::info("Funcs: {}", bus.funcs());
-
-    auto servo = ilanta::PCA9685{std::move(bus)};
+    auto servo = ilanta::PCA9685{ilanta::i2c_path(i2c_port)};
 
     auto err = servo.freq(50);
     if (err)
