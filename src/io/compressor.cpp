@@ -1,14 +1,12 @@
 #include "io/compressor.h"
-#include "const.h"
 
 #include <ilanta/hal/hw/gpiod.hpp>
-#include <spdlog/spdlog.h>
 
-Compressor::Compressor(gpiod::line&& enable_line, LogicLevel active_state)
+#include "const.h"
+
+Compressor::Compressor(gpiod::line const& enable_line, LogicLevel active_state)
     : enable_line_{std::move(enable_line)} {
-  spdlog::debug("Constructing Compressor");
-
-  ilanta::request_output(enable_line_, consumer_name, active_state == LogicLevel::LOW);
+  ilanta::request_output(enable_line_, consumer_name, active_state == LogicLevel::Low);
 }
 
 auto Compressor::enabled() const noexcept -> bool { return enabled_; }
