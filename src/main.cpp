@@ -21,6 +21,7 @@ auto constexpr inline is_debug = true;
 auto main(int const argc, char const* const* const argv) -> int {
   using namespace std::literals;
 
+  // Set spdlog message level based on build type //
   spdlog::set_level(is_debug ? spdlog::level::debug : spdlog::level::info);
 
   // Argument handling //
@@ -30,6 +31,7 @@ auto main(int const argc, char const* const* const argv) -> int {
     return -1;
   }
 
+  // Set real-time scheduling policy with max priority //
   auto constexpr sched_policy = SCHED_FIFO;
   auto const param = sched_param{sched_get_priority_max(sched_policy)};
 
